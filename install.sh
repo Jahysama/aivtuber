@@ -7,7 +7,7 @@ wget -nv https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh &
     bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
     rm Miniconda3-latest-Linux-x86_64.sh
 
-conda env create -f conda-env.yaml
+conda env create -f conda-env.yaml python=3.10.9
 conda activate aivtuber
 
 cd utils
@@ -15,9 +15,9 @@ cd utils
 git clone https://github.com/jnordberg/tortoise-tts.git
 cd tortoise-tts
 python setup.py install
-mv tortoise ..
-rm -r tortoise-tts
+mv tortoise ../src/utils
 cd ..
+sudo rm -r tortoise-tts
 
 git clone https://github.com/yzhou359/MakeItTalk
 cd MakeItTalk
@@ -29,4 +29,5 @@ gdown --id 1rV0jkyDqPW-aDJcj7xSO6Zt1zSXqn1mu -O examples/ckpt/ckpt_speaker_branc
 gdown --id 1i2LJXKp-yWKIEEgJ7C6cE3_2NirfY_0a -O examples/ckpt/ckpt_116_i2i_comb.pth
 gdown --id 18-0CYl5E6ungS3H4rRSHjfYvvm-WwjTI -O examples/dump/emb.pickle
 cp ../scripts/train_image_translation.py src/approaches/train_image_translation.py
-
+cd ..
+mv MakeItTalk src/utils
