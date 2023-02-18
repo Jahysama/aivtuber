@@ -3,7 +3,7 @@
 sudo apt install git
 sudo apt install wget
 
-export PATH /opt/conda/bin:${PATH}
+export PATH=/opt/conda/bin:${PATH}
 wget -nv https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     sudo bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
     rm Miniconda3-latest-Linux-x86_64.sh
