@@ -1,11 +1,11 @@
 #!/bin/bash
 
-sudo apt install git
-sudo apt install wget
+apt install git
+apt install wget
 
 export PATH=/opt/conda/bin:${PATH}
 wget -nv https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    sudo bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
     rm Miniconda3-latest-Linux-x86_64.sh
 
 conda env create -f conda-env.yaml python=3.10.9
@@ -18,7 +18,7 @@ cd tortoise-tts
 python setup.py install
 mv tortoise ../src/utils
 cd ..
-sudo rm -r tortoise-tts
+rm -r tortoise-tts
 
 git clone https://github.com/yzhou359/MakeItTalk
 cd MakeItTalk
