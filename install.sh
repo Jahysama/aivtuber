@@ -3,16 +3,6 @@
 apt install git
 apt install wget
 
-export PATH=/opt/conda/bin:${PATH}
-wget -nv https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/conda && \
-    rm Miniconda3-latest-Linux-x86_64.sh
-echo "source activate aivtuber" > ~/.bashrc
-export PATH=/opt/conda/envs/aivtuber/bin:${PATH}
-
-conda env create -f conda-env.yaml python=3.10.9
-conda activate aivtuber
-
 cd src/utils
 
 git clone https://github.com/jnordberg/tortoise-tts.git
