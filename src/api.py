@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import sys
 import threading
 import queue
 import time
@@ -72,8 +72,8 @@ def talking_face_generation():
     import torchaudio
     import torch
 
-    from utils.MakeItTalk.src.approaches.train_audio2landmark import Audio2landmark_model
-    from utils.MakeItTalk.src.autovc.AutoVC_mel_Convertor_retrain_version import AutoVC_mel_Convertor
+    from src.approaches.train_audio2landmark import Audio2landmark_model
+    from src.autovc.AutoVC_mel_Convertor_retrain_version import AutoVC_mel_Convertor
     from utils.talking_face_generation import opt_parser
     from utils.talking_face_generation import get_talking_head
 
@@ -86,11 +86,13 @@ def talking_face_generation():
     model = Audio2landmark_model(opt_parser, jpg_shape=shape_3d)
 
     def _talking_head(audio: numpy.ndarray):
+        os.chdir('utils/MakeItTalk')
         torchaudio.save('generated.wav', torch.from_numpy(audio), 24000)
         video = get_talking_head('generated.wav', landmarks, c, model)
+        os.chdir('../..')
         return video
 
-    os.chdir('../..')
+
 
     yield _talking_head
 
