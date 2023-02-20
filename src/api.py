@@ -63,6 +63,7 @@ def _check_api_key(key):
 
 request_queue = queue.Queue(maxsize=settings.queue_size)
 
+history = []
 
 @contextlib.contextmanager
 def talking_face_generation():
@@ -134,7 +135,6 @@ def hf_generation():
     from utils.text_generation import build_model_and_tokenizer_for
     from utils.text_generation import inference_fn
 
-    history = []
     model, tokenizer = build_model_and_tokenizer_for(settings.hf_model)
 
     def _generate(request: CompleteRequest):
