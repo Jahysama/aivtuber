@@ -1,14 +1,11 @@
 #!/bin/bash
 
-apt install git
-apt install wget
-
 cd src/utils
 
 git clone https://github.com/jnordberg/tortoise-tts.git
 cd tortoise-tts
 python setup.py install
-mv tortoise ../src/utils
+mv tortoise ..
 cd ..
 rm -r tortoise-tts
 
@@ -21,6 +18,6 @@ gdown --id 1r3bfEvTVl6pCNw5xwUhEglwDHjWtAqQp -O examples/ckpt/ckpt_content_branc
 gdown --id 1rV0jkyDqPW-aDJcj7xSO6Zt1zSXqn1mu -O examples/ckpt/ckpt_speaker_branch.pth
 gdown --id 1i2LJXKp-yWKIEEgJ7C6cE3_2NirfY_0a -O examples/ckpt/ckpt_116_i2i_comb.pth
 gdown --id 18-0CYl5E6ungS3H4rRSHjfYvvm-WwjTI -O examples/dump/emb.pickle
-cp ../scripts/train_image_translation.py src/approaches/train_image_translation.py
+cp ../../scripts/train_image_translation.py src/approaches/train_image_translation.py
 cd ..
 mv MakeItTalk src/utils
