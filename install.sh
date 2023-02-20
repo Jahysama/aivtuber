@@ -19,4 +19,5 @@ gdown --id 1rV0jkyDqPW-aDJcj7xSO6Zt1zSXqn1mu -O examples/ckpt/ckpt_speaker_branc
 gdown --id 1i2LJXKp-yWKIEEgJ7C6cE3_2NirfY_0a -O examples/ckpt/ckpt_116_i2i_comb.pth
 gdown --id 18-0CYl5E6ungS3H4rRSHjfYvvm-WwjTI -O examples/dump/emb.pickle
 cp ../../scripts/train_image_translation.py src/approaches/train_image_translation.py
+cp ../../scripts/models.py thirdparty/AdaptiveWingLoss/core/models.py
 cd ..
