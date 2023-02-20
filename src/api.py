@@ -79,11 +79,13 @@ def talking_face_generation():
 
     scale = numpy.float64(-0.01032258064516129)
     shift = numpy.array([-128.5, -82. ])
-    shape_3d = numpy.load('shape3d.npy')
+    shape_3d = numpy.load('../../shape3d.npy')
     landmarks = (shape_3d, scale, shift)
 
     c = AutoVC_mel_Convertor('examples')
     model = Audio2landmark_model(opt_parser, jpg_shape=shape_3d)
+
+    os.chdir('../..')
 
     def _talking_head(audio: numpy.ndarray):
         os.chdir('utils/MakeItTalk')
