@@ -4,12 +4,20 @@ import os, glob
 import numpy as np
 import cv2
 import argparse
-from MakeItTalk.src.approaches.train_image_translation import Image_translation_block
+from src.approaches.train_image_translation import Image_translation_block
 import pickle
-import MakeItTalk.util.utils as util
+import util.utils as util
 from scipy.signal import savgol_filter
-from MakeItTalk.thirdparty.resemblyer_util.speaker_emb import get_spk_emb
+from thirdparty.resemblyer_util.speaker_emb import get_spk_emb
 import torch
+
+
+default_head_name = 'paint_boy'  # the image name (with no .jpg) to animate
+ADD_NAIVE_EYE = True  # whether add naive eye blink
+CLOSE_INPUT_FACE_MOUTH = False  # if your image has an opened mouth, put this as True, else False
+AMP_LIP_SHAPE_X = 2.  # amplify the lip motion in horizontal direction
+AMP_LIP_SHAPE_Y = 2.  # amplify the lip motion in vertical direction
+AMP_HEAD_POSE_MOTION = 0.7  # amplify the head pose motion (usually smaller than 1.0, put it to 0. for a static head pose)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--jpg', type=str, default='{}.jpg'.format(default_head_name))
@@ -53,16 +61,7 @@ opt_parser = parser.parse_args()
 
 
 def get_talking_head(audio, face_landmarks, c, model):
-
     shape_3d, scale, shift = face_landmarks
-
-    default_head_name = 'paint_boy'  # the image name (with no .jpg) to animate
-    ADD_NAIVE_EYE = True  # whether add naive eye blink
-    CLOSE_INPUT_FACE_MOUTH = False  # if your image has an opened mouth, put this as True, else False
-    AMP_LIP_SHAPE_X = 2.  # amplify the lip motion in horizontal direction
-    AMP_LIP_SHAPE_Y = 2.  # amplify the lip motion in vertical direction
-    AMP_HEAD_POSE_MOTION = 0.7  # amplify the head pose motion (usually smaller than 1.0, put it to 0. for a static head pose)
-
 
     au_data = []
     au_emb = []

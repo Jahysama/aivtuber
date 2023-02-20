@@ -66,6 +66,8 @@ request_queue = queue.Queue(maxsize=settings.queue_size)
 
 @contextlib.contextmanager
 def talking_face_generation():
+    import os
+    os.chdir('MakeItTalk')
     import numpy
     import torchaudio
     import torch
@@ -87,6 +89,8 @@ def talking_face_generation():
         torchaudio.save('generated.wav', torch.from_numpy(audio), 24000)
         video = get_talking_head('generated.wav', landmarks, c, model)
         return video
+
+    os.chdir('..')
 
     yield _talking_head
 

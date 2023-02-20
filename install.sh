@@ -5,9 +5,9 @@ cd src/utils
 git clone https://github.com/jnordberg/tortoise-tts.git
 cd tortoise-tts
 python setup.py install
-mv tortoise ..
+mv tortoise ../..
 cd ..
-rm -r tortoise-tts
+rm -rf tortoise-tts
 
 git clone https://github.com/yzhou359/MakeItTalk
 cd MakeItTalk
@@ -20,4 +20,3 @@ gdown --id 1i2LJXKp-yWKIEEgJ7C6cE3_2NirfY_0a -O examples/ckpt/ckpt_116_i2i_comb.
 gdown --id 18-0CYl5E6ungS3H4rRSHjfYvvm-WwjTI -O examples/dump/emb.pickle
 cp ../../scripts/train_image_translation.py src/approaches/train_image_translation.py
 cd ..
-mv MakeItTalk src/utils
