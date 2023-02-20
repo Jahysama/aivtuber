@@ -66,7 +66,7 @@ def get_talking_head(audio, face_landmarks, c, model):
     au_data = []
     au_emb = []
 
-    img = cv2.imread('MakeItTalk', 'examples/' + opt_parser.jpg)
+    img = cv2.imread('examples/' + opt_parser.jpg)
 
     # au embedding
     me, ae = get_spk_emb(audio)
@@ -87,20 +87,20 @@ def get_talking_head(audio, face_landmarks, c, model):
         rot_quat.append(np.zeros(shape=(au_length, 4)))
         anchor_t_shape.append(np.zeros(shape=(au_length, 68 * 3)))
 
-    if (os.path.exists(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_fl.pickle'))):
-        os.remove(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_fl.pickle'))
-    if (os.path.exists(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_fl_interp.pickle'))):
-        os.remove(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_fl_interp.pickle'))
-    if (os.path.exists(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_au.pickle'))):
-        os.remove(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_au.pickle'))
+    if (os.path.exists(os.path.join( 'examples', 'dump', 'random_val_fl.pickle'))):
+        os.remove(os.path.join('examples', 'dump', 'random_val_fl.pickle'))
+    if (os.path.exists(os.path.join('examples', 'dump', 'random_val_fl_interp.pickle'))):
+        os.remove(os.path.join( 'examples', 'dump', 'random_val_fl_interp.pickle'))
+    if (os.path.exists(os.path.join('examples', 'dump', 'random_val_au.pickle'))):
+        os.remove(os.path.join('examples', 'dump', 'random_val_au.pickle'))
     if (os.path.exists(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_gaze.pickle'))):
-        os.remove(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_gaze.pickle'))
+        os.remove(os.path.join('examples', 'dump', 'random_val_gaze.pickle'))
 
-    with open(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_fl.pickle'), 'wb') as fp:
+    with open(os.path.join('examples', 'dump', 'random_val_fl.pickle'), 'wb') as fp:
         pickle.dump(fl_data, fp)
-    with open(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_au.pickle'), 'wb') as fp:
+    with open(os.path.join('examples', 'dump', 'random_val_au.pickle'), 'wb') as fp:
         pickle.dump(au_data, fp)
-    with open(os.path.join('MakeItTalk', 'examples', 'dump', 'random_val_gaze.pickle'), 'wb') as fp:
+    with open(os.path.join('examples', 'dump', 'random_val_gaze.pickle'), 'wb') as fp:
         gaze = {'rot_trans': rot_tran, 'rot_quat': rot_quat, 'anchor_t_shape': anchor_t_shape}
         pickle.dump(gaze, fp)
 
@@ -109,11 +109,11 @@ def get_talking_head(audio, face_landmarks, c, model):
     else:
         model.test(au_emb=None)
 
-    fls = glob.glob1('MakeItTalk', 'examples', 'pred_fls_*.txt')
+    fls = glob.glob1('examples', 'pred_fls_*.txt')
     fls.sort()
 
     for i in range(0,len(fls)):
-        fl = np.loadtxt(os.path.join('MakeItTalk', 'examples', fls[i])).reshape((-1, 68,3))
+        fl = np.loadtxt(os.path.join('examples', fls[i])).reshape((-1, 68,3))
         fl[:, :, 0:2] = -fl[:, :, 0:2]
         fl[:, :, 0:2] = fl[:, :, 0:2] / scale - shift
 
@@ -131,7 +131,7 @@ def get_talking_head(audio, face_landmarks, c, model):
         with torch.no_grad():
             video = model.single_test(jpg=img, fls=fl, filename=fls[i], prefix=opt_parser.jpg.split('.')[0])
             print('finish image2image gen')
-        os.remove(os.path.join('MakeItTalk', 'examples', fls[i]))
+        os.remove(os.path.join('examples', fls[i]))
 
     return video
 
