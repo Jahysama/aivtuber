@@ -90,7 +90,7 @@ def talking_face_generation():
         if wav_count > 0:
             os.remove(f'examples/generated_{wav_count-1}.wav')
         torchaudio.save(f'examples/generated_{wav_count}.wav', torch.from_numpy(audio), 24000)
-        video = get_talking_head(f'generated_{wav_count}.wav', landmarks, model)
+        video = get_talking_head(f'generated_{wav_count}.wav', landmarks)
         audio_embs = []
         wav_count +=1
         for i in range(0, len(video)):
