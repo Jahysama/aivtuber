@@ -116,7 +116,7 @@ def get_talking_head(audio, face_landmarks,):
     else:
         model.test(au_emb=None)
 
-    fls = glob.glob1('examples', 'pred_fls_*.txt')
+    fls = glob.glob1('examples', 'pred_fls_generated_audio_embed.txt')
     fls.sort()
 
     # for i in range(0,len(fls)):
