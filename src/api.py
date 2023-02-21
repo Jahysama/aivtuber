@@ -64,6 +64,7 @@ def _check_api_key(key):
 request_queue = queue.Queue(maxsize=settings.queue_size)
 
 history = []
+wav_count = 0
 
 @contextlib.contextmanager
 def talking_face_generation():
@@ -74,7 +75,7 @@ def talking_face_generation():
     import torch
 
     from src.approaches.train_audio2landmark import Audio2landmark_model
-    from src.autovc.AutoVC_mel_Convertor_retrain_version import AutoVC_mel_Convertor
+
     from utils.talking_face_generation import opt_parser
     from utils.talking_face_generation import get_talking_head
 
@@ -83,7 +84,6 @@ def talking_face_generation():
     shape_3d = numpy.load('../../shape3d.npy')
     landmarks = (shape_3d, scale, shift)
 
-    c = AutoVC_mel_Convertor('examples')
     model = Audio2landmark_model(opt_parser, jpg_shape=shape_3d)
 
     os.chdir('../..')
@@ -156,6 +156,7 @@ def hf_generation():
         result = result.split('*')
         result = [v for i, v in enumerate(result) if i % 2 == 0]
         result = " ".join(result)
+        result = result.split('   ')[1]
 
         history.append(f"You: {request.prompt}")
         history.append(result)
