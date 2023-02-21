@@ -93,7 +93,7 @@ def talking_face_generation():
         torchaudio.save('examples/generated.wav', torch.from_numpy(audio), 24000)
         video = get_talking_head('generated.wav', landmarks, c, model)
         with open('examples/pred_fls_generated_audio_embed.txt', 'r') as audio_emb_file:
-            audio_emb = audio_emb_file.readlines()
+            audio_emb = audio_emb_file.read()
         os.chdir('../..')
         return video, audio_emb
 
