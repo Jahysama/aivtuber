@@ -190,7 +190,7 @@ def worker():
 
                     logger.info(f"writing log took {time.time() - start_time}")
                     start_time = time.time()
-                    response_queue.put({'response': response, 'emotion': emotion, 'audio': audio.tolist(), 'video': video.tolist()})
+                    response_queue.put({'response': response, 'emotion': emotion, 'audio': audio.tolist(), 'video': video})
                     logger.info(f"putting response took {time.time() - start_time}")
                 except KeyboardInterrupt:
                     logger.info(f"Got KeyboardInterrupt... quitting!")
