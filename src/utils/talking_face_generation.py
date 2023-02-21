@@ -8,6 +8,7 @@ import pickle
 
 from thirdparty.resemblyer_util.speaker_emb import get_spk_emb
 from src.autovc.AutoVC_mel_Convertor_retrain_version import AutoVC_mel_Convertor
+from src.approaches.train_audio2landmark import Audio2landmark_model
 
 
 default_head_name = 'paint_boy'  # the image name (with no .jpg) to animate
@@ -55,9 +56,10 @@ parser.add_argument('-f')
 opt_parser = parser.parse_args()
 
 
-def get_talking_head(audio, face_landmarks, model):
+def get_talking_head(audio, face_landmarks,):
     shape_3d, scale, shift = face_landmarks
     c = AutoVC_mel_Convertor('examples')
+    model = Audio2landmark_model(opt_parser, jpg_shape=shape_3d)
 
     au_data = []
     au_emb = []

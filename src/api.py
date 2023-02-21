@@ -73,8 +73,6 @@ def talking_face_generation():
     import torchaudio
     import torch
 
-    from src.approaches.train_audio2landmark import Audio2landmark_model
-
     from utils.talking_face_generation import opt_parser
     from utils.talking_face_generation import get_talking_head
 
@@ -83,7 +81,6 @@ def talking_face_generation():
     shape_3d = numpy.load('../../shape3d.npy')
     landmarks = (shape_3d, scale, shift)
 
-    model = Audio2landmark_model(opt_parser, jpg_shape=shape_3d)
 
     os.chdir('../..')
 
