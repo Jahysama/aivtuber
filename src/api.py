@@ -156,7 +156,6 @@ def hf_generation():
         result = result.split('*')
         result = [v for i, v in enumerate(result) if i % 2 == 0]
         result = " ".join(result)
-        result = result.split('   ')[1]
 
         history.append(f"You: {request.prompt}")
         history.append(result)
