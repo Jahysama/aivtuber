@@ -92,8 +92,7 @@ def talking_face_generation():
         os.chdir('utils/MakeItTalk')
         torchaudio.save('examples/generated.wav', torch.from_numpy(audio), 24000)
         video = get_talking_head('generated.wav', landmarks, c, model)
-        with open('examples/pred_fls_generated_audio_embed.txt', 'r') as audio_emb_file:
-            audio_emb = audio_emb_file.read()
+        audio_emb = numpy.loadtxt('examples/pred_fls_generated_audio_embed.txt')
         os.chdir('../..')
         return video, audio_emb
 
@@ -192,7 +191,7 @@ def worker():
 
                     logger.info(f"writing log took {time.time() - start_time}")
                     start_time = time.time()
-                    response_queue.put({'response': response, 'emotion': emotion, 'audio': audio.tolist(), 'video': video, 'audio_emb': audio_emb})
+                    response_queue.put({'response': response, 'emotion': emotion, 'audio': audio.tolist(), 'video': video, 'audio_emb': audio_emb.tolist()})
                     logger.info(f"putting response took {time.time() - start_time}")
                 except KeyboardInterrupt:
                     logger.info(f"Got KeyboardInterrupt... quitting!")
