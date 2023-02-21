@@ -4,12 +4,9 @@ import os, glob
 import numpy as np
 import cv2
 import argparse
-from src.approaches.train_image_translation import Image_translation_block
 import pickle
-import util.utils as util
-from scipy.signal import savgol_filter
+
 from thirdparty.resemblyer_util.speaker_emb import get_spk_emb
-import torch
 
 
 default_head_name = 'paint_boy'  # the image name (with no .jpg) to animate
@@ -65,16 +62,20 @@ def get_talking_head(audio, face_landmarks, c, model):
 
     au_data = []
     au_emb = []
+    ains = glob.glob1('examples', '*.wav')
+    ains = [item for item in ains if item is not 'tmp.wav']
+    ains.sort()
+
 
     img = cv2.imread('examples/' + opt_parser.jpg)
 
-    # au embedding
-    me, ae = get_spk_emb(audio)
-    au_emb.append(me.reshape(-1))
+    for ain in ains:
+        me, ae = get_spk_emb(audio)
+        au_emb.append(me.reshape(-1))
 
-    au_data_i = c.convert_single_wav_to_autovc_input(audio_filename=audio,
-                                                     autovc_model_path=opt_parser.load_AUTOVC_name)
-    au_data += au_data_i
+        au_data_i = c.convert_single_wav_to_autovc_input(audio_filename=os.path.join('examples', ain),
+                                                         autovc_model_path=opt_parser.load_AUTOVC_name)
+        au_data += au_data_i
 
     # landmark fake placeholder
     fl_data = []
