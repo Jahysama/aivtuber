@@ -22,21 +22,18 @@ parser.add_argument('--close_input_face_mouth', default=CLOSE_INPUT_FACE_MOUTH, 
 
 parser.add_argument('--load_AUTOVC_name', type=str, default='examples/ckpt/ckpt_autovc.pth')
 parser.add_argument('--load_a2l_G_name', type=str, default='examples/ckpt/ckpt_speaker_branch.pth')
-parser.add_argument('--load_a2l_C_name', type=str,
-                    default='examples/ckpt/ckpt_content_branch.pth')  # ckpt_audio2landmark_c.pth')
-parser.add_argument('--load_G_name', type=str,
-                    default='examples/ckpt/ckpt_116_i2i_comb.pth')  # ckpt_image2image.pth') #ckpt_i2i_finetune_150.pth') #c
+parser.add_argument('--load_a2l_C_name', type=str, default='examples/ckpt/ckpt_content_branch.pth') #ckpt_audio2landmark_c.pth')
+parser.add_argument('--load_G_name', type=str, default='examples/ckpt/ckpt_116_i2i_comb.pth') #ckpt_image2image.pth') #ckpt_i2i_finetune_150.pth') #c
 
 parser.add_argument('--amp_lip_x', type=float, default=AMP_LIP_SHAPE_X)
 parser.add_argument('--amp_lip_y', type=float, default=AMP_LIP_SHAPE_Y)
 parser.add_argument('--amp_pos', type=float, default=AMP_HEAD_POSE_MOTION)
-parser.add_argument('--reuse_train_emb_list', type=str, nargs='+',
-                    default=[])  # ['iWeklsXc0H8']) #['45hn7-LXDX8']) #['E_kmpT-EfOg']) #'iWeklsXc0H8', '29k8RtSUjE0', '45hn7-LXDX8',
+parser.add_argument('--reuse_train_emb_list', type=str, nargs='+', default=[]) #  ['iWeklsXc0H8']) #['45hn7-LXDX8']) #['E_kmpT-EfOg']) #'iWeklsXc0H8', '29k8RtSUjE0', '45hn7-LXDX8',
 parser.add_argument('--add_audio_in', default=False, action='store_true')
 parser.add_argument('--comb_fan_awing', default=False, action='store_true')
 parser.add_argument('--output_folder', type=str, default='examples')
 
-parser.add_argument('--test_end2end', default=False, action='store_true')
+parser.add_argument('--test_end2end', default=True, action='store_true')
 parser.add_argument('--dump_dir', type=str, default='', help='')
 parser.add_argument('--pos_dim', default=7, type=int)
 parser.add_argument('--use_prior_net', default=True, action='store_true')
