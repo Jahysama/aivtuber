@@ -70,7 +70,7 @@ def get_talking_head(audio, face_landmarks, c, model):
     img = cv2.imread('examples/' + opt_parser.jpg)
 
     for ain in ains:
-        me, ae = get_spk_emb(audio)
+        me, ae = get_spk_emb('examples/{}'.format(ain))
         au_emb.append(me.reshape(-1))
 
         au_data_i = c.convert_single_wav_to_autovc_input(audio_filename=os.path.join('examples', ain),
