@@ -91,7 +91,7 @@ def talking_face_generation():
     def _talking_head(audio: numpy.ndarray):
         os.chdir('utils/MakeItTalk')
         torchaudio.save('examples/generated.wav', torch.from_numpy(audio), 24000)
-        video = get_talking_head('generated.wav', landmarks, c, model)
+        video = get_talking_head('generated.wav', landmarks, model)
         audio_embs = []
         for i in range(0, len(video)):
             audio_emb = numpy.loadtxt(f'examples/{video[i]}').tolist()
