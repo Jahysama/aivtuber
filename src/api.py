@@ -12,7 +12,6 @@ import pydantic
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-import uvicorn
 import os
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
@@ -89,10 +88,14 @@ def talking_face_generation():
     os.chdir('../..')
 
     def _talking_head(audio: numpy.ndarray):
+        global wav_count
         os.chdir('utils/MakeItTalk')
-        torchaudio.save('examples/generated.wav', torch.from_numpy(audio), 24000)
-        video = get_talking_head('generated.wav', landmarks, model)
+        if wav_count > 0:
+            os.remove(f'examples/generated_{wav_count-1}.wav')
+        torchaudio.save(f'examples/generated_{wav_count}.wav', torch.from_numpy(audio), 24000)
+        video = get_talking_head(f'generated_{wav_count}.wav', landmarks, model)
         audio_embs = []
+        wav_count +=1
         for i in range(0, len(video)):
             audio_emb = numpy.loadtxt(f'examples/{video[i]}').tolist()
             audio_embs.append(audio_emb)
