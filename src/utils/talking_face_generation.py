@@ -72,16 +72,16 @@ def get_talking_head(audio, face_landmarks,):
     img = cv2.imread('examples/' + opt_parser.jpg)
 
     for ain in ains:
-        os.system('ffmpeg -y -loglevel error -i examples/{} -ar 16000 examples/tmp.wav'.format(ain))
-        shutil.copyfile('examples/tmp.wav', 'examples/{}'.format(ain))
+        #os.system('ffmpeg -y -loglevel error -i examples/{} -ar 16000 examples/tmp.wav'.format(ain))
+        #shutil.copyfile('examples/tmp.wav', 'examples/{}'.format(ain))
         me, ae = get_spk_emb('examples/{}'.format(ain))
         au_emb.append(me.reshape(-1))
 
         au_data_i = c.convert_single_wav_to_autovc_input(audio_filename=os.path.join('examples', ain),
                                                          autovc_model_path=opt_parser.load_AUTOVC_name)
         au_data += au_data_i
-    if (os.path.isfile('examples/tmp.wav')):
-        os.remove('examples/tmp.wav')
+    #if (os.path.isfile('examples/tmp.wav')):
+       # os.remove('examples/tmp.wav')
 
     # landmark fake placeholder
     fl_data = []
