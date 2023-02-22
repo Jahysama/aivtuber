@@ -85,6 +85,7 @@ def talking_face_generation():
 
     def _talking_head(audio: numpy.ndarray):
         os.chdir('utils/MakeItTalk')
+        os.system('touch examples/pred_fls_generated_audio_embed.txt')
         os.remove('examples/pred_fls_generated_audio_embed.txt')
         #os.remove(f'examples/generated.wav')
         torchaudio.save(f'examples/generated.wav', torch.from_numpy(audio), 24000)
@@ -157,7 +158,7 @@ def hf_generation():
         history.append(f"You: {request.prompt}")
         history.append(result)
 
-        return result.replace('Noisy chan: ', '')[3:]
+        return result.replace('Noisy chan: ', '')[4:]
 
     yield _generate
 
