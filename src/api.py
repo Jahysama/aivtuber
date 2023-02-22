@@ -37,7 +37,7 @@ class Settings(pydantic.BaseSettings):
     voice: str = 'emma'
     voice_quality: str = 'ultra_fast'
     char_settings: list[str] = [
-                                'Aimelia', #character name
+                                'Noisy chan', #character name
                                 'Chat', #user name
                                 'A very cool twitch streamer and gamer, also AI powered by GPT-J. Streamer is very tolerant and does not say any slurs.',
                                 'Hello',
@@ -75,8 +75,8 @@ def talking_face_generation():
     from utils.talking_face_generation import opt_parser
     from utils.talking_face_generation import get_talking_head
 
-    scale = numpy.float64(-0.01032258064516129)
-    shift = numpy.array([-128.5, -82. ])
+    scale = numpy.float64(-0.00963855421686747)
+    shift = numpy.array([-122., -105.])
     shape_3d = numpy.load('../../shape3d.npy')
     landmarks = (shape_3d, scale, shift)
 
@@ -147,7 +147,7 @@ def hf_generation():
                               user_input=request.prompt,
                               generation_settings=None,
                               char_settings=settings.char_settings)
-        result = result.replace(f"Aimelia:", f"**Aimelia:**") \
+        result = result.replace(f"Noisy chan:", f"**Noisy chan:**") \
             .replace("<USER>", "Chat").replace('\n', ' ')
 
         result = result.split('*')
@@ -157,7 +157,7 @@ def hf_generation():
         history.append(f"You: {request.prompt}")
         history.append(result)
 
-        return result.replace('Aimelia: ', '')
+        return result.replace('Noisy chan: ', '')[3:]
 
     yield _generate
 

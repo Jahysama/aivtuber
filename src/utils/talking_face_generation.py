@@ -12,12 +12,12 @@ from src.autovc.AutoVC_mel_Convertor_retrain_version import AutoVC_mel_Convertor
 from src.approaches.train_audio2landmark import Audio2landmark_model
 
 
-default_head_name = 'paint_boy'  # the image name (with no .jpg) to animate
+default_head_name = 'anya'  # the image name (with no .jpg) to animate
 ADD_NAIVE_EYE = True  # whether add naive eye blink
 CLOSE_INPUT_FACE_MOUTH = False  # if your image has an opened mouth, put this as True, else False
-AMP_LIP_SHAPE_X = 2.  # amplify the lip motion in horizontal direction
-AMP_LIP_SHAPE_Y = 2.  # amplify the lip motion in vertical direction
-AMP_HEAD_POSE_MOTION = 0.7  # amplify the head pose motion (usually smaller than 1.0, put it to 0. for a static head pose)
+AMP_LIP_SHAPE_X = 3.5  # amplify the lip motion in horizontal direction
+AMP_LIP_SHAPE_Y = 4.1  # amplify the lip motion in vertical direction
+AMP_HEAD_POSE_MOTION = 0.9  # amplify the head pose motion (usually smaller than 1.0, put it to 0. for a static head pose)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--jpg', type=str, default='{}.jpg'.format(default_head_name))
