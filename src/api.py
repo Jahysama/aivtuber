@@ -88,6 +88,7 @@ def talking_face_generation():
         #os.remove(f'examples/generated.wav')
         torchaudio.save(f'examples/generated.wav', torch.from_numpy(audio), 24000)
         video = get_talking_head(f'generated.wav', landmarks)
+        video = get_talking_head(f'generated.wav', landmarks)
         audio_embs = []
         for i in range(0, len(video)):
             audio_emb = numpy.loadtxt(f'examples/{video[i]}').tolist()
