@@ -223,7 +223,6 @@ def startup():
             target=worker,
             daemon=True,
             ).start()
-    _enqueue(CompleteRequest(prompt="hello"))
 
 
 @app.post("/complete")
