@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-import sys
 import threading
 import queue
 import time
@@ -72,7 +71,6 @@ def talking_face_generation():
     import torchaudio
     import torch
 
-    from utils.talking_face_generation import opt_parser
     from utils.talking_face_generation import get_talking_head
 
     scale = numpy.float64(-0.00963855421686747)
@@ -143,7 +141,7 @@ def hf_generation():
     from llama_index import LangchainEmbedding
     from llama_index import LLMPredictor, PromptHelper
     from llama_index import SimpleDirectoryReader
-    from ..scripts.GPTSimpleVectorIndexContext import GPTSimpleVectorIndexContext
+    from src.scripts import GPTSimpleVectorIndexContext
 
     from os import path
 
