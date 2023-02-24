@@ -176,6 +176,7 @@ def hf_generation():
         max_sim_index = similarities.index(max(similarities))
         char_settings = settings.char_settings
         if max(similarities) > 0.1:
+            logger.info(f"Context: {text[max_sim_index]}")
             char_settings[2] = char_settings[2] + '\n'\
                                     + text[max_sim_index]
 
