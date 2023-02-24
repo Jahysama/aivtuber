@@ -136,17 +136,57 @@ def hf_generation():
     from utils.text_generation import build_model_and_tokenizer_for
     from utils.text_generation import inference_fn
 
+    from transformers import pipeline
+    from langchain import HuggingFacePipeline
+    from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+    
+    from llama_index import LangchainEmbedding
+    from llama_index import LLMPredictor, PromptHelper
+    from llama_index import SimpleDirectoryReader
+    from ..scripts.GPTSimpleVectorIndexQuery import GPTSimpleVectorIndexContext
+
+    from os import path
+
     model, tokenizer = build_model_and_tokenizer_for(settings.hf_model)
+    
+    pipe = pipeline(
+        "text-generation", model=model, tokenizer=tokenizer, max_new_tokens=256
+    )
+
+    embed_model = LangchainEmbedding(HuggingFaceEmbeddings())
+    llm_predictor = LLMPredictor(llm=HuggingFacePipeline(pipeline=pipe))
+    max_input_size = 512
+    num_output = 256
+    max_chunk_overlap = 256
+    prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
+
+    if path.exists('../index.json'):
+        index = GPTSimpleVectorIndexContext.load_from_disk('../index.json', llm_predictor=llm_predictor,
+                                                    embed_model=embed_model, prompt_helper=prompt_helper)
+    else:
+        documents = SimpleDirectoryReader('../data').load_data()
+        index = GPTSimpleVectorIndexContext(documents, llm_predictor=llm_predictor, embed_model=embed_model,
+                                     prompt_helper=prompt_helper)
+        index.save_to_disk('../index.json')
 
     def _generate(request: CompleteRequest):
         global history
+
+        query = index.query(request.prompt)
+        similarities = [similarity for _, similarity in query]
+        text = [node.get_text() for node, _ in query]
+        max_sim_index = similarities.index(max(similarities))
+        char_settings = settings.char_settings
+        if max(similarities) > 0.1:
+            char_settings[2] = char_settings[2] + '\n'\
+                                    + text[max_sim_index]
 
         result = inference_fn(model=model,
                               tokenizer=tokenizer,
                               history=history[:4],
                               user_input=request.prompt,
                               generation_settings=None,
-                              char_settings=settings.char_settings)
+                              char_settings=char_settings)
         result = result.replace(f"Noisy chan:", f"**Noisy chan:**") \
             .replace("<USER>", "Chat").replace('\n', ' ')
 
