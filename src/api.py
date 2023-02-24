@@ -143,7 +143,7 @@ def hf_generation():
     from llama_index import LangchainEmbedding
     from llama_index import LLMPredictor, PromptHelper
     from llama_index import SimpleDirectoryReader
-    from ..scripts.GPTSimpleVectorIndexQuery import GPTSimpleVectorIndexContext
+    from ..scripts.GPTSimpleVectorIndexContext import GPTSimpleVectorIndexContext
 
     from os import path
 
