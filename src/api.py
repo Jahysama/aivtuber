@@ -155,7 +155,7 @@ def hf_generation():
     llm_predictor = LLMPredictor(llm=HuggingFacePipeline(pipeline=pipe))
     max_input_size = 512
     num_output = 256
-    max_chunk_overlap = 256
+    max_chunk_overlap = -100000
     prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
 
     if path.exists('../index.json'):
