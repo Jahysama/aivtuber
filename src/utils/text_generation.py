@@ -211,10 +211,11 @@ def inference_fn(model: transformers.AutoModelForCausalLM, tokenizer: transforme
     if generation_settings is None:
         generation_settings = {
                 "do_sample": True,
-                "max_new_tokens": 128,
-                "temperature": 0.4,
+                "max_new_tokens": 256,
+                "temperature": 0.5,
+                "min_length": 100,
                 "top_p": 0.9,
-                "top_k": 0,
+                "top_k": 50,
                 "typical_p": 1.0,
                 "repetition_penalty": 1.05,
             }
