@@ -163,7 +163,7 @@ def hf_generation():
 
     embed_model = LangchainEmbedding(HuggingFaceEmbeddings())
     llm_predictor = LLMPredictor(llm=HuggingFacePipeline(pipeline=pipe))
-    max_input_size = 128
+    max_input_size = 270
     num_output = 128
     max_chunk_overlap = 100
     prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
