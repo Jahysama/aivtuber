@@ -47,6 +47,7 @@ class Settings(pydantic.BaseSettings):
 
 settings = Settings()
 
+
 def _check_api_key(key):
     key = key.strip()
     for line in Path(settings.api_keys_file).open():
@@ -62,6 +63,7 @@ def _check_api_key(key):
 request_queue = queue.Queue(maxsize=settings.queue_size)
 
 history = []
+
 
 @contextlib.contextmanager
 def talking_face_generation():
@@ -177,8 +179,9 @@ def hf_generation():
         char_settings = settings.char_settings
         if max(similarities) > 0.1:
             logger.info(f"Context: {text[max_sim_index]}")
-            char_settings[2] = char_settings[2] + '\n'\
-                                    + text[max_sim_index]
+            char_settings[4] = char_settings[4] +\
+                                '\nAlso streamer knows and follows this information:\n' +\
+                                text[max_sim_index]
 
         result = inference_fn(model=model,
                               tokenizer=tokenizer,
