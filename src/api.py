@@ -197,10 +197,11 @@ def hf_generation():
             inputs = processor(raw_image, return_tensors="pt").to("cuda", torch.float16)
             out = image2text.generate(**inputs)
             view_over_time.append(processor.decode(out[0], skip_special_tokens=True))
-
+        view = "\n".join(view_over_time)
+        logger.info(f'View: {view}')
         char_settings[4] = char_settings[4] + \
                            '\nStreamer sees what is happening on the screen over time:\n' + \
-                           '\n'.join(view_over_time)
+                           view
 
 
         result = inference_fn(model=model,

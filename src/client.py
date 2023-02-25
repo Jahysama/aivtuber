@@ -124,18 +124,23 @@ def my_forever_while():
     while thread_running:
             for i in range(len(buf)):
                 if not pause:
-                    if i%120 == 0:
-                        if len(screenshots) > 30:
-                            screenshots.pop(0)
-                        os.system("import -silent -window root vision.png")
-                        image = Image.open('vision.png').convert(mode="RGB")
-                        screenshots.append(np.array(image).tolist())
                     frame = buf[i] * 255.0
                     cam.send(cv2.bitwise_not(frame.astype(np.uint8)[..., ::-1]))
                     #cam.sleep_until_next_frame()
                     time.sleep(1 / 60)
 
+def take_screenshot():
+    global thread_running
+    global pause
+    global screenshots
 
+    if not pause:
+        if len(screenshots) > 30:
+            screenshots.pop(0)
+        os.system("import -silent -window root vision.png")
+        image = Image.open('vision.png').convert(mode="RGB")
+        screenshots.append(np.array(image).tolist())
+        time.sleep(2)
 
 def take_input():
     global thread_running
@@ -164,9 +169,11 @@ def take_input():
 if __name__ == '__main__':
     t1 = Thread(target=my_forever_while)
     t2 = Thread(target=take_input)
+    t3 = Thread(target=take_screenshot)
 
     t1.start()
     t2.start()
+    t3.start()
 
     t2.join()  # interpreter will wait until your process get completed or terminated
     thread_running = False
