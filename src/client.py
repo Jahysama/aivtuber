@@ -16,6 +16,7 @@ import util.utils as util
 from scipy.signal import savgol_filter
 from src.approaches.train_image_translation import Image_translation_block
 import cv2
+from PIL import Image
 
 
 default_head_name = 'anya'  # the image name (with no .jpg) to animate
@@ -94,7 +95,7 @@ def make_video(fls, audio_emb):
     return video
 
 
-cam = pyvirtualcam.Camera(width=256, height=256, fps=75, device='/dev/video3')
+cam = pyvirtualcam.Camera(width=256, height=256, fps=90, device='/dev/video3')
 cap = cv2.VideoCapture('/home/keeper/Videos/anya_idle.mp4')
 frameCount = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 frameWidth = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -112,15 +113,23 @@ cap.release()
 
 thread_running = True
 pause = False
+screenshots = []
 
 
 def my_forever_while():
     global thread_running
     global pause
+    global screenshots
 
     while thread_running:
             for i in range(len(buf)):
                 if not pause:
+                    if i%120 == 0:
+                        if len(screenshots) > 30:
+                            screenshots.pop(0)
+                        os.system("import -silent -window root vision.png")
+                        image = Image.open('vision.png').convert(mode="RGB")
+                        screenshots.append(np.array(image).tolist())
                     frame = buf[i] * 255.0
                     cam.send(cv2.bitwise_not(frame.astype(np.uint8)[..., ::-1]))
                     #cam.sleep_until_next_frame()
@@ -135,10 +144,11 @@ def take_input():
     while thread_running:
         user_input = input('Input text: ')
         resp = requests.post('http://localhost:8000/complete',
-                             json={'prompt': user_input, 'api_key': 'superkey'}).json()['response']
+                             json={'prompt': user_input, 'api_key': 'superkey', 'screen': screenshots}).json()['response']
         video = make_video(np.array(resp['video']), resp['audio_emb'])
         voice = np.array(resp['audio'])
         vid = []
+        print(resp['response'])
         for i in range(len(video)):
             frame = video[i] * 255.0
             vid.append(frame.astype(np.uint8)[..., ::-1])

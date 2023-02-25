@@ -133,10 +133,13 @@ def emo_detection():
 
 @contextlib.contextmanager
 def hf_generation():
+    import torch
+
     from utils.text_generation import build_model_and_tokenizer_for
     from utils.text_generation import inference_fn
 
     from transformers import pipeline
+    from transformers import BlipProcessor, BlipForConditionalGeneration
     from langchain import HuggingFacePipeline
     from langchain.embeddings.huggingface import HuggingFaceEmbeddings
     
@@ -145,9 +148,14 @@ def hf_generation():
     from llama_index import SimpleDirectoryReader
     from scripts.GPTSimpleVectorIndexContext import GPTSimpleVectorIndexContext
 
+    from PIL import Image
     from os import path
+    import numpy as np
 
     model, tokenizer = build_model_and_tokenizer_for(settings.hf_model)
+    processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+    image2text = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",
+                                                         torch_dtype=torch.float16).to("cuda")
     
     pipe = pipeline(
         "text-generation", model=model, tokenizer=tokenizer, max_new_tokens=256
@@ -182,6 +190,18 @@ def hf_generation():
             char_settings[4] = char_settings[4] +\
                                 '\nAlso streamer knows and follows this information:\n' +\
                                 text[max_sim_index]
+
+        view_over_time = []
+        for image in request.screen:
+            raw_image = Image.fromarray(np.array(image).astype('uint8'))
+            inputs = processor(raw_image, return_tensors="pt").to("cuda", torch.float16)
+            out = image2text.generate(**inputs)
+            view_over_time.append(processor.decode(out[0], skip_special_tokens=True))
+
+        char_settings[4] = char_settings[4] + \
+                           '\nStreamer sees what is happening on the screen over time:\n' + \
+                           '\n'.join(view_over_time)
+
 
         result = inference_fn(model=model,
                               tokenizer=tokenizer,
@@ -252,6 +272,7 @@ async def main():
 class CompleteRequest(pydantic.BaseModel):
     prompt: pydantic.constr(min_length=0, max_length=2**14)
     api_key: pydantic.constr(min_length=1, max_length=128) = "x"*9
+    screen: list[list]
 
 def _enqueue(request: CompleteRequest):
     response_queue = queue.Queue()
