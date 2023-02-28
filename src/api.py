@@ -292,6 +292,7 @@ def worker():
                         cam.send(frame)
                         cam.sleep_until_next_frame()
                     logger.info(f"putting response took {time.time() - start_time}")
+                    pause_idle_animation = False
                 except KeyboardInterrupt:
                     logger.info(f"Got KeyboardInterrupt... quitting!")
                     raise

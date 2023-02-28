@@ -126,7 +126,7 @@ def get_talking_head(audio, face_landmarks,):
 
     for i in range(0,len(fls)):
 
-        fl = np.array(au_emb[0]).reshape((-1, 68, 3))
+        fl = np.loadtxt(os.path.join('examples', fls[i])).reshape((-1, 68,3))
         fl[:, :, 0:2] = -fl[:, :, 0:2]
         fl[:, :, 0:2] = fl[:, :, 0:2] / scale - shift
 
