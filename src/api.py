@@ -262,7 +262,6 @@ def worker():
             while True:
                 response_queue = None
                 try:
-                    cam, buf = prepare_cam()
                     start_time = time.time()
                     (request, response_queue) = request_queue.get()
                     logger.info(f"getting request took {time.time() - start_time}")
@@ -304,7 +303,8 @@ def worker():
 
 def stream_video():
     global pause_idle_animation
-    global cam global buf
+    global cam
+    global buf
     for i in range(len(buf)):
         if not pause_idle_animation:
             frame = buf[i] * 255.0
