@@ -333,16 +333,10 @@ def _enqueue(request: CompleteRequest):
 
 @app.on_event("startup")
 def startup():
-    # threading.Thread(
-    #         target=worker,
-    #         daemon=True,
-    #         ).start()
-    stream_vid = threading.Thread(
-            target=stream_video,
+    threading.Thread(
+            target=worker,
             daemon=True,
-            )
-    stream_vid.start()
-    stream_vid.join()
+            ).start()
 
 
 
