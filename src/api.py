@@ -99,7 +99,7 @@ def talking_face_generation():
     yield _talking_head
 
 
-@contextlib.contextmanager
+
 def prepare_virtual_camera():
     import pyvirtualcam
     import cv2
