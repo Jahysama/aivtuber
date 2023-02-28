@@ -133,14 +133,12 @@ def take_screenshot():
     global thread_running
     global pause
     global screenshots
-
-    if not pause:
-        if len(screenshots) > 30:
-            screenshots.pop(0)
-        os.system("import -silent -window root vision.png")
-        image = Image.open('vision.png').convert(mode="RGB")
-        screenshots.append(np.array(image).tolist())
-        time.sleep(2)
+    if len(screenshots) > 30:
+        screenshots.pop(0)
+    os.system("import -silent -window 0x640003e vision.png")
+    image = Image.open('vision.png').convert(mode="RGB")
+    screenshots.append(np.array(image).tolist())
+    time.sleep(2)
 
 def take_input():
     global thread_running
@@ -150,28 +148,28 @@ def take_input():
         user_input = input('Input text: ')
         resp = requests.post('http://localhost:8000/complete',
                              json={'prompt': user_input, 'api_key': 'superkey', 'screen': screenshots}).json()['response']
-        video = make_video(np.array(resp['video']), resp['audio_emb'])
+        #video = make_video(np.array(resp['video']), resp['audio_emb'])
         voice = np.array(resp['audio'])
-        vid = []
+        #vid = []
         print(resp['response'])
-        for i in range(len(video)):
-            frame = video[i] * 255.0
-            vid.append(frame.astype(np.uint8)[..., ::-1])
-        pause = True
+        #for i in range(len(video)):
+        #    frame = video[i] * 255.0
+        #    vid.append(frame.astype(np.uint8)[..., ::-1])
+        #pause = True
         sd.play(voice.T, 24000)
-        for frame in vid:
-            cam.send(frame)
-            cam.sleep_until_next_frame()
+        #for frame in vid:
+        #    cam.send(frame)
+        #    cam.sleep_until_next_frame()
             #time.sleep(1 / 375)
-        pause = False
+        #pause = False
 
 
 if __name__ == '__main__':
-    t1 = Thread(target=my_forever_while)
+    #t1 = Thread(target=my_forever_while)
     t2 = Thread(target=take_input)
     t3 = Thread(target=take_screenshot)
 
-    t1.start()
+    #t1.start()
     t2.start()
     t3.start()
 

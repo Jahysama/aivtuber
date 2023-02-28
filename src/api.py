@@ -8,6 +8,9 @@ import contextlib
 
 import pydantic
 
+import cv2
+import numpy
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -64,6 +67,8 @@ request_queue = queue.Queue(maxsize=settings.queue_size)
 
 history = []
 
+pause_idle_animation = False
+
 
 @contextlib.contextmanager
 def talking_face_generation():
@@ -89,17 +94,37 @@ def talking_face_generation():
         torchaudio.save(f'examples/generated.wav', torch.from_numpy(audio), 24000)
         video = get_talking_head(f'generated.wav', landmarks)
         video = get_talking_head(f'generated.wav', landmarks)
-        audio_embs = []
-        for i in range(0, len(video)):
-            audio_emb = numpy.loadtxt(f'examples/{video[i]}').tolist()
-            audio_embs.append(audio_emb)
-        os.chdir('../..')
-        return video, audio_embs
-
-
+        return video
 
     yield _talking_head
 
+
+@contextlib.contextmanager
+def prepare_virtual_camera():
+    import pyvirtualcam
+    import cv2
+    import numpy
+
+    cam = pyvirtualcam.Camera(width=256, height=256, fps=90, device='/dev/video3')
+    cap = cv2.VideoCapture('idle.mp4')
+    frameCount = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    frameWidth = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    frameHeight = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    buf = numpy.empty((frameCount, frameHeight, frameWidth, 3), numpy.dtype('uint8'))
+
+    fc = 0
+    ret = True
+
+    while (fc < frameCount and ret):
+        ret, buf[fc] = cap.read()
+        fc += 1
+    cap.release()
+
+    def _get_cam():
+        return cam, buf
+
+    yield _get_cam
 
 
 @contextlib.contextmanager
@@ -226,14 +251,17 @@ def hf_generation():
 
 
 def worker():
+    global pause
     generation = hf_generation
     with generation() as generate_fn, emo_detection() as emo_detection_fn, \
             audio_generation() as audio_generation_fn, \
-            talking_face_generation() as talking_face_generation_fn:
+            talking_face_generation() as talking_face_generation_fn,\
+            prepare_virtual_camera() as prepare_cam:
         with open(settings.log_file, "a") as logf:
             while True:
                 response_queue = None
                 try:
+                    cam, buf = prepare_cam()
                     start_time = time.time()
                     (request, response_queue) = request_queue.get()
                     logger.info(f"getting request took {time.time() - start_time}")
@@ -241,7 +269,7 @@ def worker():
                     response = generate_fn(request)
                     emotion = emo_detection_fn(response)
                     audio = audio_generation_fn(response)
-                    video, audio_emb = talking_face_generation_fn(audio)
+                    video = talking_face_generation_fn(audio)
                     logger.info(f"generate took {time.time() - start_time}, response length: {len(response)}")
                     start_time = time.time()
 
@@ -254,7 +282,15 @@ def worker():
 
                     logger.info(f"writing log took {time.time() - start_time}")
                     start_time = time.time()
-                    response_queue.put({'response': response, 'emotion': emotion, 'audio': audio.tolist(), 'video': video, 'audio_emb': audio_emb})
+                    response_queue.put({'response': response, 'emotion': emotion, 'audio': audio.tolist()})
+                    vid = []
+                    for i in range(len(video)):
+                        frame = video[i] * 255.0
+                        vid.append(frame.astype(numpy.uint8)[..., ::-1])
+                    pause = True
+                    for frame in vid:
+                        cam.send(frame)
+                        cam.sleep_until_next_frame()
                     logger.info(f"putting response took {time.time() - start_time}")
                 except KeyboardInterrupt:
                     logger.info(f"Got KeyboardInterrupt... quitting!")
@@ -264,6 +300,17 @@ def worker():
                     if response_queue is not None:
                         response_queue.put("")
 
+
+def stream_video():
+    global pause
+    with prepare_virtual_camera() as prepare_cam:
+        cam, buf = prepare_cam()
+        for i in range(len(buf)):
+            if not pause:
+                frame = buf[i] * 255.0
+                cam.send(cv2.bitwise_not(frame.astype(numpy.uint8)[..., ::-1]))
+                cam.sleep_until_next_frame()
+                #time.sleep(1 / 60)
 
 
 @app.get("/")
@@ -286,6 +333,10 @@ def _enqueue(request: CompleteRequest):
 def startup():
     threading.Thread(
             target=worker,
+            daemon=True,
+            ).start()
+    threading.Thread(
+            target=stream_video,
             daemon=True,
             ).start()
 
