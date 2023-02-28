@@ -105,7 +105,7 @@ def prepare_virtual_camera():
     import cv2
     import numpy
 
-    cam = pyvirtualcam.Camera(width=256, height=256, fps=90, device='/dev/video3')
+    cam = pyvirtualcam.Camera(width=256, height=256, fps=62.5, device='/dev/video0')
     cap = cv2.VideoCapture('idle.mp4')
     frameCount = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     frameWidth = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -121,10 +121,10 @@ def prepare_virtual_camera():
         fc += 1
     cap.release()
 
-    def _get_cam():
-        return cam, buf
+    return cam, buf
 
-    yield _get_cam
+
+cam, buf = prepare_virtual_camera()
 
 
 @contextlib.contextmanager
@@ -251,12 +251,13 @@ def hf_generation():
 
 
 def worker():
-    global pause
+    global pause_idle_animation
+    global cam
+    global buf
     generation = hf_generation
     with generation() as generate_fn, emo_detection() as emo_detection_fn, \
             audio_generation() as audio_generation_fn, \
-            talking_face_generation() as talking_face_generation_fn,\
-            prepare_virtual_camera() as prepare_cam:
+            talking_face_generation() as talking_face_generation_fn:
         with open(settings.log_file, "a") as logf:
             while True:
                 response_queue = None
@@ -287,7 +288,7 @@ def worker():
                     for i in range(len(video)):
                         frame = video[i] * 255.0
                         vid.append(frame.astype(numpy.uint8)[..., ::-1])
-                    pause = True
+                    pause_idle_animation = True
                     for frame in vid:
                         cam.send(frame)
                         cam.sleep_until_next_frame()
@@ -302,15 +303,14 @@ def worker():
 
 
 def stream_video():
-    global pause
-    with prepare_virtual_camera() as prepare_cam:
-        cam, buf = prepare_cam()
-        for i in range(len(buf)):
-            if not pause:
-                frame = buf[i] * 255.0
-                cam.send(cv2.bitwise_not(frame.astype(numpy.uint8)[..., ::-1]))
-                cam.sleep_until_next_frame()
-                #time.sleep(1 / 60)
+    global pause_idle_animation
+    global cam global buf
+    for i in range(len(buf)):
+        if not pause_idle_animation:
+            frame = buf[i] * 255.0
+            cam.send(cv2.bitwise_not(frame.astype(numpy.uint8)[..., ::-1]))
+            cam.sleep_until_next_frame()
+            # time.sleep(1 / 60)
 
 
 @app.get("/")

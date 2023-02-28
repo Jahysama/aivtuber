@@ -8,7 +8,7 @@ os.chdir('utils/MakeItTalk')
 import numpy as np
 import torch
 import argparse
-import pyvirtualcam
+#import pyvirtualcam
 import time
 import requests
 import sounddevice as sd
@@ -95,21 +95,21 @@ def make_video(fls, audio_emb):
     return video
 
 
-cam = pyvirtualcam.Camera(width=256, height=256, fps=90, device='/dev/video3')
-cap = cv2.VideoCapture('/home/keeper/Videos/anya_idle.mp4')
-frameCount = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-frameWidth = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-frameHeight = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+#cam = pyvirtualcam.Camera(width=256, height=256, fps=90, device='/dev/video3')
+#cap = cv2.VideoCapture('/home/keeper/Videos/anya_idle.mp4')
+#frameCount = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+#frameWidth = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+#frameHeight = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
-buf = np.empty((frameCount, frameHeight, frameWidth, 3), np.dtype('uint8'))
+#buf = np.empty((frameCount, frameHeight, frameWidth, 3), np.dtype('uint8'))
 
-fc = 0
-ret = True
+#fc = 0
+#ret = True
 
-while (fc < frameCount  and ret):
-    ret, buf[fc] = cap.read()
-    fc += 1
-cap.release()
+#while (fc < frameCount  and ret):
+#    ret, buf[fc] = cap.read()
+#    fc += 1
+#cap.release()
 
 thread_running = True
 pause = False
@@ -135,7 +135,7 @@ def take_screenshot():
     global screenshots
     if len(screenshots) > 30:
         screenshots.pop(0)
-    os.system("import -silent -window 0x640003e vision.png")
+    os.system("import -silent -window root vision.png")
     image = Image.open('vision.png').convert(mode="RGB")
     screenshots.append(np.array(image).tolist())
     time.sleep(2)
