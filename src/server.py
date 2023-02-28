@@ -8,5 +8,5 @@ if __name__ == '__main__':
             daemon=True,
             )
     stream_vid.start()
-    stream_vid.join()
     uvicorn.run(app, host='localhost', port=8000)
+    stream_vid.join()
