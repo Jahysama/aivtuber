@@ -306,12 +306,13 @@ def stream_video():
     global pause_idle_animation
     global cam
     global buf
-    for i in range(len(buf)):
-        if not pause_idle_animation:
-            frame = buf[i] * 255.0
-            cam.send(cv2.bitwise_not(frame.astype(numpy.uint8)[..., ::-1]))
-            cam.sleep_until_next_frame()
-            # time.sleep(1 / 60)
+    while True:
+        for i in range(len(buf)):
+            if not pause_idle_animation:
+                frame = buf[i] * 255.0
+                cam.send(cv2.bitwise_not(frame.astype(numpy.uint8)[..., ::-1]))
+                cam.sleep_until_next_frame()
+                # time.sleep(1 / 60)
 
 
 @app.get("/")
@@ -332,14 +333,17 @@ def _enqueue(request: CompleteRequest):
 
 @app.on_event("startup")
 def startup():
-    threading.Thread(
-            target=worker,
-            daemon=True,
-            ).start()
-    threading.Thread(
+    # threading.Thread(
+    #         target=worker,
+    #         daemon=True,
+    #         ).start()
+    stream_vid = threading.Thread(
             target=stream_video,
             daemon=True,
-            ).start()
+            )
+    stream_vid.start()
+    stream_vid.join()
+
 
 
 @app.post("/complete")
