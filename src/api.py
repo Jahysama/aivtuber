@@ -93,7 +93,6 @@ def talking_face_generation():
         #os.remove(f'examples/generated.wav')
         torchaudio.save(f'examples/generated.wav', torch.from_numpy(audio), 24000)
         video = get_talking_head(f'generated.wav', landmarks)
-        video = get_talking_head(f'generated.wav', landmarks)
         os.chdir('../..')
         return video
 

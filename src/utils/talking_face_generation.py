@@ -62,7 +62,7 @@ parser.add_argument('-f')
 opt_parser = parser.parse_args()
 
 
-def get_talking_head(audio, face_landmarks,):
+def get_landmarks(audio, face_landmarks):
     shape_3d, scale, shift = face_landmarks
     c = AutoVC_mel_Convertor('examples')
     model = Audio2landmark_model(opt_parser, jpg_shape=shape_3d)
@@ -123,6 +123,13 @@ def get_talking_head(audio, face_landmarks,):
 
     fls = glob.glob1('examples', 'pred_fls_generated_audio_embed.txt')
     fls.sort()
+    return fls
+
+
+def get_talking_head(audio, face_landmarks):
+
+    fls = get_landmarks(audio, face_landmarks)
+    fls = get_landmarks(audio, face_landmarks)
 
     for i in range(0,len(fls)):
 
