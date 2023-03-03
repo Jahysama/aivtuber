@@ -74,8 +74,6 @@ def get_landmarks(audio, face_landmarks):
     ains.sort()
 
 
-    img = cv2.imread('examples/' + opt_parser.jpg)
-
     for ain in ains:
         #os.system('ffmpeg -y -loglevel error -i examples/{} -ar 16000 examples/tmp.wav'.format(ain))
         #shutil.copyfile('examples/tmp.wav', 'examples/{}'.format(ain))
@@ -127,9 +125,11 @@ def get_landmarks(audio, face_landmarks):
 
 
 def get_talking_head(audio, face_landmarks):
+    shape_3d, scale, shift = face_landmarks
+    img = cv2.imread('examples/' + opt_parser.jpg)
+    fls = get_landmarks(audio, face_landmarks)
+    fls = get_landmarks(audio, face_landmarks)
 
-    fls = get_landmarks(audio, face_landmarks)
-    fls = get_landmarks(audio, face_landmarks)
 
     for i in range(0,len(fls)):
 
