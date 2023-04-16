@@ -162,7 +162,7 @@ def hf_generation():
     from utils.text_generation import inference_fn
 
     from transformers import pipeline
-    from transformers import BlipProcessor, BlipForConditionalGeneration
+    from transformers import Pix2StructForConditionalGeneration, Pix2StructProcessor
     from langchain import HuggingFacePipeline
     from langchain.embeddings.huggingface import HuggingFaceEmbeddings
     
@@ -176,10 +176,9 @@ def hf_generation():
     import numpy as np
 
     model, tokenizer = build_model_and_tokenizer_for()
-    processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-    image2text = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",
-                                                         torch_dtype=torch.float16).to("cuda")
-    
+    image2text = Pix2StructForConditionalGeneration.from_pretrained("google/pix2struct-textcaps-base",  torch_dtype=torch.float16).to("cuda")
+    processor = Pix2StructProcessor.from_pretrained("google/pix2struct-textcaps-base")
+
     pipe = pipeline(
         "text-generation", model=model, tokenizer=tokenizer, max_new_tokens=256
     )
