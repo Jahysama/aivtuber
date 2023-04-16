@@ -39,11 +39,9 @@ class Settings(pydantic.BaseSettings):
     voice: str = 'emma'
     voice_quality: str = 'ultra_fast'
     char_settings: list[str] = [
-                                'Noisy chan', #character name
-                                'Chat', #user name
-                                'A very cool twitch streamer and gamer, also AI powered by GPT-J. Streamer is very tolerant and does not say any slurs.',
-                                'Hello',
-                                'Streamer interacts with live chat',
+                                'Your name is Noisy chan', #character name
+                                'You are talking with a Chat', #user name
+                                'You follow a personality of a very cool twitch streamer and gamer, also AI powered by Llama. You are is very tolerant and does not say any slurs.'
                                 ''
                                ]
 
@@ -177,7 +175,7 @@ def hf_generation():
     from os import path
     import numpy as np
 
-    model, tokenizer = build_model_and_tokenizer_for(settings.hf_model)
+    model, tokenizer = build_model_and_tokenizer_for()
     processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
     image2text = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base",
                                                          torch_dtype=torch.float16).to("cuda")
@@ -212,8 +210,8 @@ def hf_generation():
         char_settings = settings.char_settings
         if max(similarities) > 0.1:
             logger.info(f"Context: {text[max_sim_index]}")
-            char_settings[4] = char_settings[4] +\
-                                '\nAlso streamer knows and follows this information:\n' +\
+            char_settings[2] = char_settings[2] +\
+                                '\nConsider and follow this information:\n' +\
                                 text[max_sim_index]
 
         view_over_time = []
@@ -224,28 +222,27 @@ def hf_generation():
             view_over_time.append(processor.decode(out[0], skip_special_tokens=True))
         view = "\n".join(view_over_time)
         logger.info(f'View: {view}')
-        char_settings[4] = char_settings[4] + \
+        char_settings[2] = char_settings[2] + \
                            '\nStreamer sees what is happening on the screen over time:\n' + \
                            view
+        char_settings[2] = char_settings[2] + '\nHere is a history of a current conversation:\n' + \
+                            '\n'.join(history[:4])
 
+        char_settings = "\n".join(char_settings)
 
         result = inference_fn(model=model,
                               tokenizer=tokenizer,
-                              history=history[:4],
                               user_input=request.prompt,
                               generation_settings=None,
                               char_settings=char_settings)
-        result = result.replace(f"Noisy chan:", f"**Noisy chan:**") \
-            .replace("<USER>", "Chat").replace('\n', ' ')
 
-        result = result.split('*')
-        result = [v for i, v in enumerate(result) if i % 2 == 0]
-        result = " ".join(result)
+        result_final = 'Noisy chan: ' + result
+        result = result.replace("Chat", "User")
 
-        history.append(f"You: {request.prompt}")
-        history.append(result)
+        history.append(f"Chat: {request.prompt}")
+        history.append(result_final)
 
-        return result.replace('Noisy chan: ', '')[3:]
+        return result
 
     yield _generate
 
