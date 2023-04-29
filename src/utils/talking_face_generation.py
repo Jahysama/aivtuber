@@ -1,11 +1,10 @@
 import sys
 sys.path.append("MakeItTalk/thirdparty/AdaptiveWingLoss")
-
 import os, glob
 import numpy as np
 import cv2
 import shutil
-import utils as util
+import util.utils as util
 import argparse
 import pickle
 import torch
