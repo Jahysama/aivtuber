@@ -1,5 +1,7 @@
 import sys
 sys.path.append("MakeItTalk/thirdparty/AdaptiveWingLoss")
+sys.path.append("MakeItTalk")
+
 import os, glob
 import numpy as np
 import cv2
