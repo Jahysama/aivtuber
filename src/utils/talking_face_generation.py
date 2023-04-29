@@ -1,8 +1,5 @@
 import sys
 sys.path.append("MakeItTalk/thirdparty/AdaptiveWingLoss")
-sys.path.append("MakeItTalk/util")
-sys.path.append("MakeItTalk/src")
-sys.path.append("MakeItTalk/thirdparty")
 
 import os, glob
 import numpy as np
