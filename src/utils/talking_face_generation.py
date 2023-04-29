@@ -1,6 +1,8 @@
 import sys
 sys.path.append("MakeItTalk/thirdparty/AdaptiveWingLoss")
 sys.path.append("MakeItTalk/util")
+sys.path.append("MakeItTalk/src")
+sys.path.append("MakeItTalk/thirdparty")
 
 import os, glob
 import numpy as np
@@ -12,11 +14,11 @@ import pickle
 import torch
 
 from scipy.signal import savgol_filter
-from MakeItTalk.src.approaches.train_image_translation import Image_translation_block
+from src.approaches.train_image_translation import Image_translation_block
 
-from MakeItTalk.thirdparty.resemblyer_util.speaker_emb import get_spk_emb
-from MakeItTalk.src.autovc.AutoVC_mel_Convertor_retrain_version import AutoVC_mel_Convertor
-from MakeItTalk.src.approaches.train_audio2landmark import Audio2landmark_model
+from thirdparty.resemblyer_util.speaker_emb import get_spk_emb
+from src.autovc.AutoVC_mel_Convertor_retrain_version import AutoVC_mel_Convertor
+from src.approaches.train_audio2landmark import Audio2landmark_model
 
 
 default_head_name = 'anya'  # the image name (with no .jpg) to animate
