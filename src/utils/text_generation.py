@@ -3,8 +3,8 @@ from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig
 
 
 def build_model_and_tokenizer_for():
-    base = "decapoda-research/llama-30b-hf"
-    finetuned = "decapoda-research/llama-30b-hf"
+    base = "decapoda-research/llama-7b-hf"
+    finetuned = "tloen/alpaca-lora-7b"
     tokenizer = LlamaTokenizer.from_pretrained(base)
     tokenizer.pad_token_id = 0
     tokenizer.padding_side = "left"
