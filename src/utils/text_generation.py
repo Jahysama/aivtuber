@@ -11,7 +11,8 @@ def build_model_and_tokenizer_for():
 
     model = LlamaForCausalLM.from_pretrained(
         base,
-        device_map="auto"
+        load_in_8bit=True,
+        device_map="auto",
     )
 
     model = PeftModel.from_pretrained(model, finetuned, device_map={'': 0})
