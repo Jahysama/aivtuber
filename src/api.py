@@ -225,7 +225,7 @@ def hf_generation():
                            '\nStreamer sees what is happening on the screen over time:\n' + \
                            view
         char_settings[2] = char_settings[2] + '\nHere is a history of a current conversation:\n' + \
-                            '\n'.join(history[:4])
+                            '\n'.join(history[:3])
 
         char_settings = "\n".join(char_settings)
 

@@ -17,6 +17,12 @@ from scipy.signal import savgol_filter
 from src.approaches.train_image_translation import Image_translation_block
 import cv2
 from PIL import Image
+import websocket
+import time
+import socket
+
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 
 default_head_name = 'anya'  # the image name (with no .jpg) to animate
@@ -129,6 +135,7 @@ def my_forever_while():
                     #cam.sleep_until_next_frame()
                     time.sleep(1 / 60)
 
+
 def take_screenshot():
     global thread_running
     global pause
@@ -139,6 +146,18 @@ def take_screenshot():
     image = Image.open('vision.png').convert(mode="RGB")
     screenshots.append(np.array(image).tolist())
     time.sleep(2)
+
+
+def on_message(ws, message):
+    sock.sendto(message, ("127.0.0.1", 11574))
+
+
+def send_landmarks():
+    websocket.enableTrace(False)
+    ws = websocket.WebSocketApp("ws://localhost:8080/ws",
+                              on_message = on_message)
+    ws.run_forever()
+
 
 def take_input():
     global thread_running
@@ -164,14 +183,17 @@ def take_input():
         #pause = False
 
 
+
 if __name__ == '__main__':
-    #t1 = Thread(target=my_forever_while)
+    t1 = Thread(target=send_landmarks)
     t2 = Thread(target=take_input)
     t3 = Thread(target=take_screenshot)
 
-    #t1.start()
+    t1.start()
     t2.start()
     t3.start()
 
     t2.join()  # interpreter will wait until your process get completed or terminated
+    t1.join()
+
     thread_running = False

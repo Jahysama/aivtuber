@@ -3,16 +3,16 @@ from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig
 
 
 def build_model_and_tokenizer_for():
-    base = "decapoda-research/llama-7b-hf"
-    finetuned = "tloen/alpaca-lora-7b"
+    base = "OpenAssistant/oasst-sft-7-llama-30b-xor"
+    finetuned = "OpenAssistant/oasst-sft-7-llama-30b-xor"
     tokenizer = LlamaTokenizer.from_pretrained(base)
     tokenizer.pad_token_id = 0
     tokenizer.padding_side = "left"
 
     model = LlamaForCausalLM.from_pretrained(
         base,
-        load_in_8bit=True,
         device_map="auto",
+        max_length=30
     )
 
     model = PeftModel.from_pretrained(model, finetuned, device_map={'': 0})
