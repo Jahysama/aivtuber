@@ -250,6 +250,9 @@ def worker():
     global pause_idle_animation
     global cam
     global buf
+    import torch
+
+    torch.cuda.empty_cache()
     generation = hf_generation
     with generation() as generate_fn, emo_detection() as emo_detection_fn, \
             audio_generation() as audio_generation_fn, \
