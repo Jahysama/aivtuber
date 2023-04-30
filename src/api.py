@@ -207,7 +207,7 @@ def hf_generation():
         text = [node.get_text() for node, _ in query]
         max_sim_index = similarities.index(max(similarities))
         char_settings = settings.char_settings
-        if max(similarities) > 0.1:
+        if max(similarities) > 0.4:
             logger.info(f"Context: {text[max_sim_index]}")
             char_settings[2] = char_settings[2] +\
                                 '\nConsider and follow this information:\n' +\
