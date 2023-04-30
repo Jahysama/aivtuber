@@ -11,8 +11,7 @@ def build_model_and_tokenizer_for():
 
     model = LlamaForCausalLM.from_pretrained(
         base,
-        device_map="auto",
-        max_length=30
+        device_map="auto"
     )
 
     model = PeftModel.from_pretrained(model, finetuned, device_map={'': 0})
