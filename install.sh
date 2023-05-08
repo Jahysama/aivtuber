@@ -2,12 +2,6 @@
 
 cd src/utils
 
-git clone https://github.com/jnordberg/tortoise-tts.git
-cd tortoise-tts
-python setup.py install
-mv tortoise ../..
-cd ..
-rm -rf tortoise-tts
 
 git clone https://github.com/yzhou359/MakeItTalk
 cd MakeItTalk

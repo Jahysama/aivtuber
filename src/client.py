@@ -8,6 +8,7 @@ os.chdir('utils/MakeItTalk')
 
 import numpy as np
 import torch
+
 import argparse
 #import pyvirtualcam
 import time

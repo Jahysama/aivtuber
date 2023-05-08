@@ -86,10 +86,9 @@ def talking_face_generation():
 
     os.chdir('../..')
 
-    def _talking_head(audio: numpy.ndarray):
+    def _talking_head():
         os.chdir('utils/MakeItTalk')
         #os.remove(f'examples/generated.wav')
-        torchaudio.save(f'examples/generated.wav', torch.from_numpy(audio), 24000)
         video = get_talking_head(f'generated.wav', landmarks)
         os.chdir('../..')
         return video
@@ -127,14 +126,16 @@ cam, buf = prepare_virtual_camera()
 
 @contextlib.contextmanager
 def audio_generation():
-    from tortoise.api import TextToSpeech
-    from utils.audio_generation import get_voice
+    from bark import SAMPLE_RATE, generate_audio, preload_models
+    from scipy.io.wavfile import write as write_wav
 
-    tts = TextToSpeech()
+    preload_models()
 
     def _voice(text: str):
-        audio = get_voice(text, tts, settings.voice, settings.voice_quality)
-        return audio
+        audio_array = generate_audio(text_prompt)
+
+        # save audio to disk
+        write_wav("utils/MakeItTalk/examples/", SAMPLE_RATE, audio_array)
 
     yield _voice
 
@@ -267,8 +268,8 @@ def worker():
                     start_time = time.time()
                     response = generate_fn(request)
                     emotion = emo_detection_fn(response)
-                    audio = audio_generation_fn(response)
-                    video = talking_face_generation_fn(audio)
+                    audio_generation_fn(response)
+                    video = talking_face_generation_fn()
                     logger.info(f"generate took {time.time() - start_time}, response length: {len(response)}")
                     start_time = time.time()
 
