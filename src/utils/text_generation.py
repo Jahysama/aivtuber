@@ -1,5 +1,8 @@
 from peft import PeftModel
 from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+
+quantization_config = BitsAndBytesConfig(llm_int8_enable_fp32_cpu_offload=True)
 
 
 def build_model_and_tokenizer_for():
@@ -12,6 +15,7 @@ def build_model_and_tokenizer_for():
     model = LlamaForCausalLM.from_pretrained(
         base,
         load_in_8bit=True,
+        quantization_config=quantization_config,
         device_map="auto",
     )
 
