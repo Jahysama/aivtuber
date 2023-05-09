@@ -12,6 +12,7 @@ def build_model_and_tokenizer_for():
     model = LlamaForCausalLM.from_pretrained(
         base,
         load_in_8bit=True,
+        load_in_8bit_fp32_cpu_offload=True,
         device_map="auto",
     )
 
