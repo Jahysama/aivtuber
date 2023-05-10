@@ -1,4 +1,5 @@
 from peft import PeftModel
+import torch
 from transformers import LlamaTokenizer, LlamaForCausalLM, GenerationConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
@@ -14,12 +15,13 @@ def build_model_and_tokenizer_for():
 
     model = LlamaForCausalLM.from_pretrained(
         base,
-        load_in_8bit=True,
         quantization_config=quantization_config,
         device_map="auto",
+        load_in_8bit=False,
+        torch_dtype=torch.float16,
     )
 
-    model = PeftModel.from_pretrained(model, finetuned, device_map={'': 1})
+    model = PeftModel.from_pretrained(model, finetuned, device_map={'': 0})
     return model, tokenizer
 
 def inference_fn(model,
