@@ -19,7 +19,7 @@ def build_model_and_tokenizer_for():
         device_map="auto",
     )
 
-    model = PeftModel.from_pretrained(model, finetuned, device_map={'': 0})
+    model = PeftModel.from_pretrained(model, finetuned, device_map={'': 1})
     return model, tokenizer
 
 def inference_fn(model,
