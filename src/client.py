@@ -93,13 +93,14 @@ def take_input():
                              json={'prompt': user_input, 'api_key': 'superkey', 'screen': screenshots}).json()['response']
         #video = make_video(np.array(resp['video']), resp['audio_emb'])
         voice = np.array(resp['audio'])
+
         #vid = []
         print(resp['response'])
         #for i in range(len(video)):
         #    frame = video[i] * 255.0
         #    vid.append(frame.astype(np.uint8)[..., ::-1])
         #pause = True
-        sd.play(voice.T, 24000)
+        sd.play(voice, 24000)
         #for frame in vid:
         #    cam.send(frame)
         #    cam.sleep_until_next_frame()

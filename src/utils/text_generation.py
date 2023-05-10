@@ -66,5 +66,6 @@ def inference_fn(model,
             max_new_tokens=256
         )
     output = ''
-    output = tokenizer.decode(generation_output.sequences[0])
+    for s in generation_output.sequences:
+        output = tokenizer.decode(s)
     return output.split("### Response:")[1].strip()
