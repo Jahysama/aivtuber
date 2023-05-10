@@ -135,7 +135,7 @@ def audio_generation():
         audio_array = generate_audio(text)
 
         # save audio to disk
-        write_wav("utils/MakeItTalk/examples/", SAMPLE_RATE, audio_array)
+        write_wav("utils/MakeItTalk/examples/generated.wav", SAMPLE_RATE, audio_array)
 
     yield _voice
 
@@ -268,7 +268,7 @@ def worker():
                     start_time = time.time()
                     response = generate_fn(request)
                     emotion = emo_detection_fn(response)
-                    audio_generation_fn(response)
+                    audio = audio_generation_fn(response)
                     video = talking_face_generation_fn()
                     logger.info(f"generate took {time.time() - start_time}, response length: {len(response)}")
                     start_time = time.time()
