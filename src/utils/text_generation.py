@@ -54,16 +54,17 @@ def inference_fn(model,
     {char_settings}
 
     ### Response:"""
+    model.eval()
     inputs = tokenizer(final_input, return_tensors="pt")
     input_ids = inputs["input_ids"].cuda()
-    generation_output = model.generate(
-        input_ids=input_ids,
-        generation_config=generation_settings,
-        return_dict_in_generate=True,
-        output_scores=True,
-        max_new_tokens=256
-    )
+    with torch.no_grad():
+        generation_output = model.generate(
+            input_ids=input_ids,
+            generation_config=generation_settings,
+            return_dict_in_generate=True,
+            output_scores=True,
+            max_new_tokens=256
+        )
     output = ''
-    for s in generation_output.sequences:
-        output = tokenizer.decode(s)
+    output = tokenizer.decode(generation_output.sequences[0])
     return output.split("### Response:")[1].strip()
