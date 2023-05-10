@@ -18,10 +18,10 @@ def build_model_and_tokenizer_for():
         quantization_config=quantization_config,
         device_map="auto",
         load_in_8bit=False,
-        torch_dtype=torch.float32,
+        torch_dtype=torch.float16,
     )
 
-    model = PeftModel.from_pretrained(model, finetuned, device_map={'': 0})
+    model = PeftModel.from_pretrained(model, finetuned, device_map={'': 0}, torch_dtype=torch.float16)
     return model, tokenizer
 
 def inference_fn(model,
