@@ -132,7 +132,7 @@ def audio_generation():
     preload_models()
 
     def _voice(text: str):
-        audio_array = generate_audio(text_prompt)
+        audio_array = generate_audio(text)
 
         # save audio to disk
         write_wav("utils/MakeItTalk/examples/", SAMPLE_RATE, audio_array)
