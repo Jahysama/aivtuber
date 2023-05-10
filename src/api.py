@@ -136,6 +136,7 @@ def audio_generation():
 
         # save audio to disk
         write_wav("utils/MakeItTalk/examples/generated.wav", SAMPLE_RATE, audio_array)
+        return audio_array
 
     yield _voice
 
