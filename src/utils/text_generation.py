@@ -32,9 +32,10 @@ def inference_fn(model,
 
     if not generation_settings:
         generation_settings = GenerationConfig(
-            temperature=0.7,
+            temperature=0.3,
             top_p=0.75,
-            num_beams=4,
+            num_beams=1,
+            max_new_tokens=64,
         )
 
     if user_input:
@@ -56,14 +57,13 @@ def inference_fn(model,
     ### Response:"""
     model.eval()
     inputs = tokenizer(final_input, return_tensors="pt")
-    input_ids = inputs["input_ids"].cuda()
+    input_ids = inputs["input_ids"].to('cuda')
     with torch.no_grad():
         generation_output = model.generate(
             input_ids=input_ids,
             generation_config=generation_settings,
             return_dict_in_generate=True,
-            output_scores=True,
-            max_new_tokens=256
+            output_scores=True
         )
     output = ''
     for s in generation_output.sequences:
