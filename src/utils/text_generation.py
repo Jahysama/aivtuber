@@ -13,15 +13,15 @@ def build_model_and_tokenizer_for():
     tokenizer.pad_token_id = 0
     tokenizer.padding_side = "left"
 
-    model = LlamaForCausalLM.from_pretrained(
+    model_base = LlamaForCausalLM.from_pretrained(
         base,
         quantization_config=quantization_config,
         device_map="auto",
         load_in_8bit=False,
-        torch_dtype=torch.float32,
+        torch_dtype=torch.float16,
     )
 
-    model = PeftModel.from_pretrained(model, finetuned, device_map={'': 0}, torch_dtype=torch.float32)
+    model = PeftModel.from_pretrained(model_base, finetuned, torch_dtype=torch.float16, force_download=True)
     return model, tokenizer
 
 def inference_fn(model,
